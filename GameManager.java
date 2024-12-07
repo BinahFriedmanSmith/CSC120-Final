@@ -96,6 +96,7 @@ public class GameManager {
     }
 
     private static void swapPlayer(){
-        
+        currentPlayer = players.get( (players.indexOf(currentPlayer) + 1) % players.size() );
+        System.out.println("You touch the golden collar around your throat. Reality shifts, and you find yourself in a different place, in a different body.");
     }
 }
