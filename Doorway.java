@@ -4,7 +4,7 @@ public class Doorway extends Item {
     private final String outDirection; //direction of path out of the connected room
 
     private final Room connectedRoom;
-
+ 
     //constructor for doorways that exist as interactable objects
     public Doorway(String name, String desc, String in, String out, Room room) {
         super(name, desc);

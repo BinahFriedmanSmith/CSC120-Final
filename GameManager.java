@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-
+ 
 public class GameManager {
     
     //List of available players to switch between, and pointer to current player
@@ -14,6 +14,10 @@ public class GameManager {
 
 
     @SuppressWarnings("ConvertToTryWithResources") //because it's annoying
+
+    /**
+     * Main method. Runs the core game loop.
+     */
     public static void main(String[] args) {
 
         // This is a "flag" to let us know when the loop should end
@@ -47,7 +51,7 @@ public class GameManager {
             // ***********************************************************************
             // And as the player interacts, you'll check to see if the game should end
             //  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓
-            if (userResponse.equals("WIN") || userResponse.equals("LOSE")) {
+            if(userResponse.equals("die horribly") == true) { //do NOT leave this in
                 stillPlaying = false;
             }
         } while (stillPlaying);
@@ -158,6 +162,10 @@ public class GameManager {
         else if (input.equals("commands")){
             commands();
         }
+        else if (input.equals("help") || input.equals("hint")){
+            help();
+        }
+        //unknown command
         else {
             System.out.println("I can't " + input);
         }

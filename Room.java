@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 
 public class Room{
-
+ 
     //adjacent rooms
     private final HashMap<String, Room> exits;
 

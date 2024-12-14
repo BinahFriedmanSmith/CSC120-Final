@@ -1,5 +1,5 @@
 public class Cage extends Item {
-    
+     
     private final Room interior;
     private Player mouse = null;
 
@@ -7,7 +7,7 @@ public class Cage extends Item {
         super(name, desc);
         interior = in;
     }
-
+ 
     public Room getInterior(){
         return interior;
     }

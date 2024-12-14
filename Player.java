@@ -133,7 +133,7 @@ public class Player{
     private void setLocation(Room room){
         location = room;
     } 
-
+ 
     /**
      * Attempts to move to a room in the specified direction (north, south, east, or west)
      * @param direction the direction to move
