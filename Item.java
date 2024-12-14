@@ -22,4 +22,11 @@ public class Item {
         return description;
     }
 
+    public void use(Player currentPlayer){
+        System.out.println("You can't use that!");
+    }
+    
+    public void use(){
+        System.out.println("You can't use that!");
+    }
 }

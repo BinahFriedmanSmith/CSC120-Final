@@ -4,12 +4,19 @@ import java.util.HashMap;
 public class Room{
 
     //adjacent rooms
-    private HashMap<String, Room> exits;
+    private final HashMap<String, Room> exits;
 
     public String description = "This is a room.";
-    private final String name = "a room";
+    private String name = "a room";
 
+    //Items in the room. can be picked up
     private final HashMap<String, Item> contents;
+    
+    //Items in the room that can be interacted with, but not picked up
+    private final HashMap<String, Item> furniture = new HashMap<>();
+
+    //things in the room that cannot be interacted with, only observed
+    private final HashMap<String, String> scenery = new HashMap<>();
 
     private boolean beenVisited = false;
 
@@ -19,6 +26,13 @@ public class Room{
     public Room(){
         contents = new HashMap<>();
         exits = new HashMap<>();
+    }
+
+    public Room(String name, String desc){
+        contents = new HashMap<>();
+        exits = new HashMap<>();
+        this.name = name;
+        this.description = desc;
     }
 
     public String getName(){
@@ -76,6 +90,7 @@ public class Room{
         return contents.containsValue(item);
     }
 
+    //checks if an item is in thhe room (contents only, for picking up things)
     public boolean itemHere(String item){
         return contents.containsKey(item);
     }
@@ -83,6 +98,55 @@ public class Room{
     public Item getItemHere(String item){
         return contents.get(item);
     }
+
+    //checks if an item is in thhe room (furniture only)
+    public boolean interactableHere(String item){
+        return furniture.containsKey(item);
+    }
+
+    public Item getInteractableHere(String item){
+        return furniture.get(item);
+    }
+
+    //checks if an item is in thhe room (contents, furniture, or scenery)
+    public boolean visibleItemHere(String item){
+        return contents.containsKey(item) || furniture.containsKey(item) || scenery.containsKey(item);
+    }
+
+    //returns the description for a visible item
+    public String viewVisibleItem(String item){
+        if (itemHere(item)){
+            return getItemHere(item).getDescription();
+        }
+        if (furniture.containsKey(item)){
+            return furniture.get(item).getDescription();
+        }
+        if (scenery.containsKey(item)){
+            return scenery.get(item);
+        }
+        return null;
+    }
+
+    public void addFurniture(Item item){
+        if (furniture.containsValue(item)){
+            throw new RuntimeException("" + item + " is already in this room.");
+        }     
+        else {
+            furniture.put(item.toString(), item);
+        }
+    }
+
+    public void addScenery(String name, String desc){
+        if (scenery.containsKey(name)){
+            throw new RuntimeException("" + name + " is already in this room.");
+        }     
+        else {
+            scenery.put(name, desc);
+        }
+    }
+
+
+
 
     /**
      * returns the room located in the given direction
@@ -117,7 +181,31 @@ public class Room{
      */
     @Override
     public String toString(){
-        return description + "\nYou can see: " + contents;
+        return description;
+    }
+
+    public void printContents(){
+        if (contents.isEmpty()){           
+        }
+        else{
+            System.out.print("You can see: ");
+            for ( String item : contents.keySet()) {
+                System.out.print(item + ", ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void printExits(){
+        if (exits.isEmpty()){
+        }
+        else{
+            System.out.print("You can go: ");
+            for ( String exit : exits.keySet()) {
+                System.out.print(exit + ", ");
+            }
+            System.out.println();
+        }
     }
 
     public void setDescription(String description) {

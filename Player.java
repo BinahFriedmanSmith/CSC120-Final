@@ -29,27 +29,29 @@ public class Player{
         if (inventory.containsKey(item)){
             System.out.println("You are already holding the " + item + ".");
         }
-        else if (!location.itemHere(item)){
-            System.out.println("You don't see that here.");
-        }     
-        else {
+        else if (location.itemHere(item)){
             System.out.println("You pick up the " + item + ".");
             inventory.put(item, location.removeItem(item));
-
+        }     
+        else if (location.visibleItemHere(item)){
+            System.out.println("You can't take that! (" + item + ")");
+        }
+        else {
+            System.out.println("You don't see that here.");
         }
     }
 
 
     
     /**
-     * Removes an item from the character's inventory, if they are holding it.
+     * Removes an item from the character's inventory and puts it in their current room location, if they are holding it.
      * @param item the item to remove
      * @return the removed item
      */
     
     public Item drop(String item){
-        if (!inventory.containsKey(item)){
-            System.out.println("You are not holding the " + item + ".");
+        if (!isHolding(item)){
+            System.out.println("You are not holding a " + item + ".");
             return null;
         }     
         else {
@@ -62,36 +64,52 @@ public class Player{
 
     /**
      * Prints a string that changes based on inputted item and gamestate
-     * @param item the item to examine
+     * @param item the name of the item to examine
      */    
     public void examine(String item){
-        if (location.itemHere(item) || inventory.containsKey(item)){
-            System.out.print("It's a(n) " + item + ". ");          
-            if (inventory.containsKey(item)){
-                System.out.print("You are holding it. ");
+        if (location.visibleItemHere(item) || isHolding(item)){          
+            if (isHolding(item)){
+                System.out.println(inventory.get(item).getDescription() + " (You are holding this item.)");
             }
-            System.out.println();
+            else{
+                System.out.println(location.viewVisibleItem(item));
+            }
         }
         else {
-            System.out.println("You don't see that here.");
+            System.out.println("You don't see that here. (" + item + ")");
         }
     }
 
     /**
-     * Uses an item. Items can only be used if they are being held.
-     * @param item the item to use
+     * Destroys a held item
+     * @param item the name of the item to destroy
      */
-    public void use(Item item){
-        if (!inventory.containsValue(item)){
-            System.out.println("You are not holding the " + item + ".");         
+    public void destroy(String item){
+        if (inventory.containsKey(item)){
+            inventory.remove(item);          
         }     
-        /*else {
-            System.out.println("You use the " + item + ".");   ////fix fix
-            inventory.remove(item);
-        }        
-        prevAction = "use";
-        prevActionString = item;
-        */
+    }
+
+    public void use(String item){     
+       if (location.interactableHere(item)){
+            location.getInteractableHere(item).use(this);
+       }
+       else if (isHolding(item)){
+            inventory.get(item).use(this);
+       }
+       else if (location.itemHere(item)){
+            System.out.println("Try picking it up first!");
+       }
+       else{
+        System.out.println("You don't see that here. (" + item + ")");
+       }
+    }
+    
+    public boolean isHolding(String item){
+        return inventory.containsKey(item);
+    }   
+    public boolean isHolding(Item item){
+        return inventory.containsValue(item);
     }
 
     /**
@@ -100,12 +118,18 @@ public class Player{
     public void checkInventory(){
         System.out.println("You are carrying: " + inventory);
     }
+ 
 
     public void look(){
-        System.out.println("You are in" + location.getName());
+        System.out.println("You are in " + location.getName());
         System.out.println(location);
+        location.printContents();
+        location.printExits();
     }
-
+    
+    public Room getLocation() {
+        return location;
+    }
     private void setLocation(Room room){
         location = room;
     } 
@@ -123,7 +147,7 @@ public class Player{
         else{
             System.out.println("You go "+ direction + ".");
             this.setLocation(location.getDirection(direction));
-            if (location.hasBeenVisited()){
+            if (!location.hasBeenVisited()){
                 look();
                 location.visit();
             }            
@@ -134,4 +158,9 @@ public class Player{
     public boolean isWearingCollar() {
         return isWearingCollar;
     }
+
+    public void wearCollar(){
+        isWearingCollar = true;
+    }
+
 }

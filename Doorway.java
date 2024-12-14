@@ -1,8 +1,25 @@
-public class Doorway {
-    private String inDirection; //direction of path into the connected room
-    private String outDirection; //direction of path out of the connected room
+public class Doorway extends Item {
+    
+    private final String inDirection; //direction of path into the connected room
+    private final String outDirection; //direction of path out of the connected room
 
-    private Room connectedRoom;
+    private final Room connectedRoom;
+
+    //constructor for doorways that exist as interactable objects
+    public Doorway(String name, String desc, String in, String out, Room room) {
+        super(name, desc);
+        inDirection = in;
+        outDirection = out;
+        connectedRoom = room;
+    }
+
+    //constructor for doorways that don't represent something interactab;e
+    public Doorway(String in, String out, Room room) {
+        super(null, null);
+        inDirection = in;
+        outDirection = out;
+        connectedRoom = room;
+    }
 
     /**
      * Activated when a Room is placed inside. Creates new exits in inputted Room and connectedRoom to each other in inDirection and outDirection respectively. fails if either already has an exit in that direction.
@@ -29,5 +46,9 @@ public class Doorway {
             //*/
         roomIn.removeExit(connectedRoom, inDirection);
         connectedRoom.removeExit(roomIn, outDirection);
+    }
+
+    public String getIn(){
+        return inDirection;
     }
 }
