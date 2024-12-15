@@ -1,7 +1,7 @@
 public class Item {
 
-    public String description = "This is an item.";
-    private String name = "item";
+    public String description = "This is an item."; //physical description of the item. include suggested actions in CAPS
+    private String name = "item"; //name of the item - how it is referred to by the player
 
     public Item(String name, String desc){
         this.name = name;

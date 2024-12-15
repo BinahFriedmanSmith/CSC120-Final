@@ -194,7 +194,7 @@ public class Player{
                 location.visit();
             }
             else{
-                System.out.println(location.getName());
+                System.out.println("You are in " + location.getName());
             }            
             return true;
         }      

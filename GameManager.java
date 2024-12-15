@@ -84,9 +84,9 @@ public class GameManager {
 
         //add the player characters
         players = new ArrayList<>();
-        players.add(new Player(room1));
+        players.add(new Player(room1, "Nothing out of the ordinary. Just your normal human body."));
         room1.visit(); //since the player character starts here it is "visited" by default
-        players.add(new Player(cage.getInterior()));
+        players.add(new Player(cage.getInterior(), "You're in the body of a little gray mouse. Cute and fluffy!"));
         cage.getInterior().visit();
         currentPlayer = players.get(0);
         cage.setMouse(players.get(1));

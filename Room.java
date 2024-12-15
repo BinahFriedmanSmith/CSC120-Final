@@ -215,16 +215,29 @@ public class Room{
 
     /**
      * Adds an exit to the room
-     * @param direction the direction of the exit
      * @param room the Room it leads to
+     * @param direction the direction of the exit
      */
     public void addExit(Room room, String direction){
+        if (this.getDirection(direction) != null){
+            throw new RuntimeException("this room ("+ description +") already has an exit that way! ("+ direction +")");
+        }
         exits.put(direction,room);
     }
     
+    /**
+     * removes an exit from the room
+     * @param direction the direction of the exit
+     */
     public void removeExit(String direction){
         exits.remove(direction);
     }
+    
+    /**
+     * removes an exit from the room
+     * @param room the Room it leads to
+     * @param direction the direction of the exit
+     */
     public void removeExit(Room room, String direction){
         exits.remove(direction,room);
     }
@@ -232,14 +245,16 @@ public class Room{
 
     /**
      * tostring override
-     * @return the room object's individual description & any items present
+     * @return the room object's individual description
      */
     @Override
     public String toString(){
         return description;
     }
 
-
+    /**
+     * prints grabbable items (Items in contents()), if there are any
+     */
     public void printContents(){
         if (contents.isEmpty()){           
         }
@@ -259,6 +274,9 @@ public class Room{
         }
     }
 
+    /**
+     * prints exits, if there are any
+     */
     public void printExits(){
         if (exits.isEmpty()){
         }
@@ -278,14 +296,25 @@ public class Room{
         }
     }
 
+    /**
+     * setter for description
+     * @param description what to change description to
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Checks if the room has been visited
+     * @return True if the room has been visited, false if not
+     */
     public boolean hasBeenVisited() {
         return beenVisited;
     }
 
+    /**
+     * sets beenVisited to true
+     */
     public void visit() {
         this.beenVisited = true;
     }
