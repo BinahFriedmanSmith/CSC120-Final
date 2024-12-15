@@ -6,8 +6,8 @@ public class Room{
     //adjacent rooms
     private final HashMap<String, Room> exits;
 
-    public String description = "This is a room.";
-    private String name = "a room";
+    public String description = "This is a room."; //long description of the room, including any scenery and furniture
+    private String name = "a room"; //short summary name of the room
 
     //Items in the room. can be picked up
     private final HashMap<String, Item> contents;
@@ -18,6 +18,7 @@ public class Room{
     //things in the room that cannot be interacted with, only observed
     private final HashMap<String, String> scenery = new HashMap<>();
 
+    //keeps track of whether the room has been visited; rooms only print their full description on entrance the first time it is entered. 
     private boolean beenVisited = false;
 
     /**
@@ -28,6 +29,11 @@ public class Room{
         exits = new HashMap<>();
     }
 
+    /**
+     * constructor with parameters
+     * @param name short summary name of the room
+     * @param desc long description of the room, including any scenery and furniture
+     */
     public Room(String name, String desc){
         contents = new HashMap<>();
         exits = new HashMap<>();
@@ -35,19 +41,26 @@ public class Room{
         this.description = desc;
     }
 
+    /**
+     * returns the name of the room
+     * @return the name of the room
+     */
     public String getName(){
         return name;
     }
 
+    /**
+     * returns the room's description
+     * @return the room's description
+     */
     public String getDescription(){
         return description;
     }
 
     /**
-     * Adds an item to the room, if it is not already there.
-     * @param item the item to remove
+     * Adds an item to the room's contents, if it is not already there.
+     * @param item the item to add
      */
-
     public void addItem(Item item){
         if (contents.containsValue(item)){
             throw new RuntimeException("" + item + " is already in this room.");
@@ -72,6 +85,11 @@ public class Room{
         }        
     }
 
+    /**
+     * Removes an item from the room, if there is an item attatched to the inputted key
+     * @param item the name of the item to remove
+     * @return the removed item
+     */
     public Item removeItem(String item){
         if (!contents.containsKey(item)){
             throw new RuntimeException("" + item + " is not in this room.");
@@ -90,30 +108,56 @@ public class Room{
         return contents.containsValue(item);
     }
 
-    //checks if an item is in thhe room (contents only, for picking up things)
+    /**
+     * checks if an item is in the room (contents only, for picking up things)
+     * @param item name/key attatched to Item
+     * @return whether Item is there
+     */
     public boolean itemHere(String item){
         return contents.containsKey(item);
     }
 
+    /**
+     * returns an item in the room (contents only, for picking up things)
+     * @param item name/key attatched to Item
+     * @return Item from contents with key 'item'
+     */
     public Item getItemHere(String item){
         return contents.get(item);
     }
 
-    //checks if an item is in thhe room (furniture only)
+    /**
+     * checks if an item is in the room (furniture only)
+     * @param item name/key attatched to Item
+     * @return whether Item is there
+     */
     public boolean interactableHere(String item){
         return furniture.containsKey(item);
     }
 
+    /**
+     * returns an item in the room (furniture only)
+     * @param item name/key attatched to Item
+     * @return Item from furniture with key 'item'
+     */
     public Item getInteractableHere(String item){
         return furniture.get(item);
     }
 
-    //checks if an item is in thhe room (contents, furniture, or scenery)
+    /**
+     * checks if an item is in the room (contents, furniture, or scenery)
+     * @param item name/key attatched to Item
+     * @return whether Item is there
+     */ 
     public boolean visibleItemHere(String item){
         return contents.containsKey(item) || furniture.containsKey(item) || scenery.containsKey(item);
     }
 
-    //returns the description for a visible item
+    /**
+    * returns the description for a visible item (contents, furniture, or scenery)
+    * @param item name/key attatched to Item
+    * @return the description for visile Item with key 'item'
+    */ 
     public String viewVisibleItem(String item){
         if (itemHere(item)){
             return getItemHere(item).getDescription();
@@ -127,6 +171,10 @@ public class Room{
         return null;
     }
 
+    /**
+     * Adds an item to the room's furniture, if it is not already there.
+     * @param item the item to add
+     */
     public void addFurniture(Item item){
         if (furniture.containsValue(item)){
             throw new RuntimeException("" + item + " is already in this room.");
@@ -136,6 +184,10 @@ public class Room{
         }
     }
 
+    /**
+     * Adds an item to the room's scenery, if it is not already there.
+     * @param item the item to add
+     */
     public void addScenery(String name, String desc){
         if (scenery.containsKey(name)){
             throw new RuntimeException("" + name + " is already in this room.");
@@ -144,8 +196,6 @@ public class Room{
             scenery.put(name, desc);
         }
     }
-
-
 
 
     /**
@@ -163,6 +213,11 @@ public class Room{
         
     }
 
+    /**
+     * Adds an exit to the room
+     * @param direction the direction of the exit
+     * @param room the Room it leads to
+     */
     public void addExit(Room room, String direction){
         exits.put(direction,room);
     }
@@ -184,13 +239,21 @@ public class Room{
         return description;
     }
 
+
     public void printContents(){
         if (contents.isEmpty()){           
         }
         else{
+            boolean first = true;
             System.out.print("You can see: ");
             for ( String item : contents.keySet()) {
-                System.out.print(item + ", ");
+               if (!first){
+                System.out.print(", ");
+               }
+               else{
+                first = false;
+               }
+               System.out.print(item);
             }
             System.out.println();
         }
@@ -200,9 +263,16 @@ public class Room{
         if (exits.isEmpty()){
         }
         else{
+            boolean first = true;
             System.out.print("You can go: ");
             for ( String exit : exits.keySet()) {
-                System.out.print(exit + ", ");
+                if (!first){
+                    System.out.print(", ");
+                   }
+                   else{
+                    first = false;
+                   }
+                System.out.print(exit);
             }
             System.out.println();
         }
