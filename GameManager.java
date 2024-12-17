@@ -30,11 +30,11 @@ public class GameManager {
         String userResponse;
 
         // runs setup, which creates the world and everthing in it
-        setup();
+        Room win = setup();
 
 
         // This could be replaced with a more interesting opening 
-        System.out.println("WELCOME TO MY GAME \nEnter \"commands\" for a list of commands.\n\n");
+        System.out.println("\n\nWELCOME TO MY GAME \nEnter \"commands\" for a list of commands.\n\n");
         currentPlayer.look();
 
 
@@ -51,8 +51,9 @@ public class GameManager {
             // ***********************************************************************
             // And as the player interacts, you'll check to see if the game should end
             //  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓
-            if(userResponse.equals("die horribly") == true) { //do NOT leave this in
+            if(win.getDirection("west") != null && win.getDirection("north") != null) {
                 stillPlaying = false;
+                System.out.println("You won! yeah thats it");
             }
         } while (stillPlaying);
 
@@ -62,25 +63,26 @@ public class GameManager {
 
     }
 
-    private static void setup() {
+    private static Room setup() {
+
+        //this is the win condition room. its a room because that was easier
+        Room win = new Room();
+
         //create rooms for human
         Room room1 = new Room("a green room", "The walls here are painted a soft grass green. A LEVER is built into the wall next to a locked door to the east. In the middle of the room is a pedestal, upon which sits a gilded cage.");
-        Room room2 = new Room("a blue room", "The walls here are painted a soothing baby blue. In the middle of the room is a pedestal holding a golden collar.");
-        Room room3 = new Room("a pink room", "The walls here are painted a subtle pastel pink.");
+        Room room2 = new Room("a blue room", "The walls here are painted a soothing baby blue. In the middle of the room is a pedestal holding a golden COLLAR. A strange SHELF is on the east wall.");
+        Room room3 = new Room("a pink room", "The walls here are painted a subtle pastel pink. There is a HIGH SHELF on the west wall and a LOW SHELF on the east. There is a LEVER here.");
 
         
        
         //create "small" rooms for mouse
-        //Room sRoom1 = new Room();
-        //Room sRoom2 = new Room();
+        Room sRoom1 = new Room("a tiny room", "A tiny LEVER is built into the wall.");
+        Room sRoom2 = new Room("another tiny room", "A tiny LEVER is built into the wall.");
+
 
         //create the cage
         Cage cage = new Cage("cage", "A golden cage, designed for a rodent. Each side of the cage is fitted with a miniature doorway, held open or closed by an unknown mechanism.",new Room("a gilded cage", "The surrounding bars are thin and dense. The floor is covered in wood shavings. Each side of the cage is fitted with a miniature doorway, held open or closed by an unknown mechanism."));
 
-        //create passages between roomsuse
-        
-        room2.addExit(room3, "east");
-        room3.addExit(room2, "west");
 
         //add the player characters
         players = new ArrayList<>();
@@ -98,22 +100,51 @@ public class GameManager {
 
         //add furniture
         room1.addFurniture(new Lever("lever", "A mechanical lever in a deep green. It is solidly built into the wall. You can USE it.", room1, new Doorway("east", "west", room2)));
+        
+        room2.addFurniture(new Doorway("shelf","A blue shelf at shoulder height on the east wall. It looks like some kind of mechanism is activated when the right thing is placed there. There's a small hole in the wall next to it. You can PUT CAGE ON it.","east", "west", sRoom1));
+        
+        room3.addFurniture(new Doorway("high shelf","A pink shelf at shoulder height on the west wall. It looks like some kind of mechanism is activated when the right thing is placed there. There's a small hole in the wall next to it. You can PUT CAGE ON it.","west", "east", sRoom1));
+        room3.addFurniture(new Doorway("low shelf","A pink shelf near the ground on the east wall. It looks like some kind of mechanism is activated when the right thing is placed there. There's a small hole in the wall next to it. You can PUT CAGE ON it.","east", "west", sRoom2));
+        room3.addFurniture(new Lever("lever", "A mechanical lever in a hot pink. It is solidly built into the wall. You can USE it.", win, new Doorway("east", "west", win)));
+
+        sRoom1.addFurniture(new Lever("lever", "A mechanical lever. It is solidly built into the wall. You can USE it.", room2, new Doorway("east", "west", room3)));
+        sRoom2.addFurniture(new Lever("lever", "A mechanical lever. It is solidly built into the wall. You can USE it.", win, new Doorway("north", "south", win)));
 
         //add scenery
         room1.addScenery("pedestal", "A marbled pillar in faint green. Upon closer inspection, it seems to be made not of stone but a dense plastic.");
         room2.addScenery("pedestal", "A marbled pillar in faint blue. Upon closer inspection, it seems to be made not of stone but a dense plastic.");
+
+        return win;
     }
 
     private static void parse(String input) {
         //special object interactions
-        if (input.equals("touch collar") & currentPlayer.isWearingCollar()){
+        if (currentPlayer.isWearingCollar() && (input.equals("touch collar") || input.equals("use collar")) ){
             swapPlayer();
         }
-        else if ((input.equals("wear collar") || input.equals("use collar")) & currentPlayer.isHolding("collar")){
+        else if ((input.equals("wear collar") || input.equals("use collar")) && currentPlayer.isHolding("collar")){
             System.out.println("You snap the collar around your neck. As you TOUCH it, something seems to happen... \n Reality shifts, and you find yourself in a different place, in a different body.");
             currentPlayer.destroy("collar");
             currentPlayer.wearCollar();
             currentPlayer = players.get( (players.indexOf(currentPlayer) + 1) % players.size() );
+        }
+        else if (input.startsWith("put cage in ") || input.startsWith("put cage on ")){ //this is sloppy implementation but i didn't prepare for this well enough and i dont really have the time or energy to make it better. augh
+            if (currentPlayer.isHolding("cage")){
+                if (currentPlayer.getLocation().visibleItemHere(input.substring(12))){
+                    if (currentPlayer.getLocation().interactableHere(input.substring(12)) && currentPlayer.getLocation().getInteractableHere(input.substring(12)) instanceof Doorway){
+                        currentPlayer.getLocation().getInteractableHere(input.substring(12)).dock((Cage)currentPlayer.drop("cage"));
+                    }
+                    else{
+                        System.out.println("You can't put the cage there.");
+                    }
+                }
+                else{
+                    System.out.println("You don't see that here! (" + input.substring(12) + ")");
+                }
+            }
+            else{
+                System.out.println("You're not holding the cage!");
+            }
         }
         //observation
         else if (input.equals("look")){

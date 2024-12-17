@@ -40,6 +40,12 @@ public class Doorway extends Item {
      * @param roomIn room to disconnect
      */
     public void undock(Room roomIn){
+        if (roomIn.getDirection(inDirection) == null) {
+            throw new RuntimeException("docked room is already missing that exit!");
+        }
+        if (connectedRoom.getDirection(outDirection) == null){
+            throw new RuntimeException("connected room is already missing that exit!");
+        }
         roomIn.removeExit(connectedRoom, inDirection);
         connectedRoom.removeExit(roomIn, outDirection);
     }
@@ -58,12 +64,15 @@ public class Doorway extends Item {
         }
         cage.getInterior().addExit(connectedRoom, inDirection);
         connectedRoom.addExit(cage.getInterior(), outDirection);
+        cage.setDock(this);
+        System.out.println("You set down the cage. The door on the " + inDirection + " of the cage opens.");
     }
      /**
      * Activated when a Cage is removed. removes exits between inputted Cage's interior and connectedRoom
      * @param cage cage to disconnect
      */
     public void undock(Cage cage){
+        //System.out.println("undockin");
         cage.getInterior().removeExit(inDirection);
         connectedRoom.removeExit(outDirection);
     }

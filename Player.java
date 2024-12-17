@@ -43,7 +43,8 @@ public class Player{
         }
         else if (location.itemHere(item)){
             System.out.println("You pick up the " + item + ".");
-            inventory.put(item, location.removeItem(item));
+            location.getItemHere(item).pickup();
+            inventory.put(item, location.removeItem(item));            
         }     
         else if (location.visibleItemHere(item)){
             System.out.println("You can't take that! (" + item + ")");
