@@ -33,8 +33,8 @@ public class GameManager {
         Room win = setup();
 
 
-        // This could be replaced with a more interesting opening 
-        System.out.println("\n\nWELCOME TO MY GAME \nEnter \"commands\" for a list of commands.\n\n");
+        
+        System.out.println("\n\nGAME BEGIN\nEnter \"commands\" for a list of commands.\n\n");
         currentPlayer.look();
 
 
@@ -63,6 +63,10 @@ public class GameManager {
 
     }
 
+    /**
+     * creates the game world and everything in it
+     * @return the "win" room that is checked to determine if you have won yet
+     */
     private static Room setup() {
 
         //this is the win condition room. its a room because that was easier
@@ -117,6 +121,10 @@ public class GameManager {
         return win;
     }
 
+    /**
+     * triggers an action based on player input
+     * @param input text the player inputs
+     */
     private static void parse(String input) {
         //special object interactions
         if (currentPlayer.isWearingCollar() && (input.equals("touch collar") || input.equals("use collar")) ){
@@ -202,11 +210,17 @@ public class GameManager {
         }
     }
 
+    /**
+     * swaps the Player commands are sent through
+     */
     private static void swapPlayer(){
         currentPlayer = players.get( (players.indexOf(currentPlayer) + 1) % players.size() );
         System.out.println("You touch the golden collar around your throat. Reality shifts, and you find yourself in a different place, in a different body.");
     }
 
+    /**
+     * updates some descriptions when certain conditions are met. called every turn
+     */
     private static void progressChecks(){
         if(!openedFirstDoor && currentPlayer.getLocation().getDirection("east") != null){
             currentPlayer.getLocation().setDescription(currentPlayer.getLocation().getDescription().replaceAll("a locked", "an open"));
@@ -220,6 +234,9 @@ public class GameManager {
 
     }
 
+    /**
+     * prints out a list of useful commands
+     */
     public static void commands(){
         System.out.println("COMMANDS:");
         System.out.println("inventory");
@@ -232,6 +249,9 @@ public class GameManager {
 
     }
 
+    /**
+     * prints out some helpful tips and explanations for playing this text adventure game
+     */
     public static void help() {
         System.out.println("\nThis is a text adventure game. This game is played by typing commands into the text input, like you have just done. Use these inputted commands to tell your player character what to do."); 
         System.out.println("As this game operates on a very simple parser, having been designed entirely by one college freshman, your options are limited.");

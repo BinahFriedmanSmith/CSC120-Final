@@ -55,6 +55,7 @@ public class Doorway extends Item {
      * Activated when a Cage is placed inside. Creates new exits in inputted Cage's interior and connectedRoom to each other in inDirection and outDirection respectively. fails if either already has an exit in that direction.
      * @param cage cage to connect
      */
+    @Override
     public void dock(Cage cage){
         if (cage.getInterior().getDirection(inDirection) != null) {
             throw new RuntimeException("docked room already has an exit that way!");
