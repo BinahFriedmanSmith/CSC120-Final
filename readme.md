@@ -25,7 +25,7 @@ I'd love to make a huge puzzle game with more complicated puzzles. I especially 
 
 
     What was the most helpful piece of feedback you received while working on your project? Who gave it to you?
-Just talking my project through with both of you (Ab and Jordan) (idk which of you guys reads these but i cried at both of you seperately) while i was feeling really overwhelmed was really helpful. I'm not sure if there was any one piece of advice that stood out
+Just talking my project through with both of you (Ab and Jordan) (idk which of you guys reads these but i talked to both of you seperately) while i was feeling really overwhelmed was really helpful. I'm not sure if there was any one piece of advice that stood out
 
 
     If you could go back in time and give your past self some advice about this project, what hints would you give?
