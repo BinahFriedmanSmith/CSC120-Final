@@ -233,11 +233,11 @@ public class GameManager {
     }
 
     public static void help() {
-        System.out.println("This is a text adventure game. This game is played by typing commands into the text input, like you have just done. Use these inputted commands to tell your player character what to do."); 
+        System.out.println("\nThis is a text adventure game. This game is played by typing commands into the text input, like you have just done. Use these inputted commands to tell your player character what to do."); 
         System.out.println("As this game operates on a very simple parser, having been designed entirely by one college freshman, your options are limited.");
-        System.out.println("For a list of example commands, type \"commands\"");
+        System.out.println("For a list of example commands, type \"commands\". Commands are not case-sensitive." );
 
-        System.out.println("Some other general hints: \n-Important items and actions will often be CAPITALIZED.\n-If you're stuck, try LOOKing AT things around you. Descriptions will often include what you can do with things.");
+        System.out.println("\nSome other general hints: \n-Important items and actions will often be CAPITALIZED.\n-If you're stuck, try LOOKing AT things around you. Descriptions will often include what you can do with things.");
     }
 
 }
